@@ -1,0 +1,1 @@
+# postgresql-jsonb-product-manager
