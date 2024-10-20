@@ -1,16 +1,18 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import psycopg2
 
 app = Flask(__name__)
+CORS(app)  # Allow CORS for all routes
 
 def connect_db():
-    connect_db = psycopg2.connect(
+    connectDB = psycopg2.connect(
         host="localhost",
-        database="products_db",
+        database="product_db",
         user="saintvandora",
         password="1234567890"
     )
-    return connect_db
+    return connectDB
 
 @app.route('/product', methods=['POST'])
 def create_product():
