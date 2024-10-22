@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import psycopg2
+import psycopg2.extras
 
 app = Flask(__name__)
 CORS(app)  # Allow CORS for all routes
@@ -47,14 +48,18 @@ def get_products():
 @app.route('/product/<int:product_id>', methods=['PUT'])
 def update_product(product_id):
     data = request.json
-    attributes = data['attributes']
+    name = data.get('name')  # Get the name from the request
+    attributes = data.get('attributes')  # Get the attributes from the request
 
     conn = connect_db()
     cur = conn.cursor()
+
+    # Update both name and attributes
     cur.execute(
-        "UPDATE products SET attributes = %s WHERE id = %s",
-        (psycopg2.extras.Json(attributes), product_id)
+        "UPDATE products SET name = %s, attributes = %s WHERE id = %s",
+        (name, psycopg2.extras.Json(attributes), product_id)
     )
+    
     conn.commit()
     cur.close()
     conn.close()
